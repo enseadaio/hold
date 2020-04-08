@@ -1,0 +1,12 @@
+[package]
+name = "hold"
+version = "0.1.0-placeholder"
+description = "Rust file storage engine, supporting multiple storage backends"
+authors = ["Matteo Joliveau <matteojoliveau@gmail.com>"]
+license = "MIT"
+edition = "2018"
+repository = "https://github.com/enseadaio/hold"
+documentation = "https://docs.rs/hold"
+readme = "README.md"
+
+[dependencies]
