@@ -17,4 +17,3 @@ rusoto_credential = "^0.43.0"
 futures = "^0.3"
 tokio = { version = "^0.2", features = ["io-util"] }
 log = "^0.4"
-env_logger = "0.7.1"

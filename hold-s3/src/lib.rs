@@ -3,9 +3,8 @@ use std::str::FromStr;
 use rusoto_core::{HttpClient, Region, RusotoError};
 use rusoto_credential::StaticProvider;
 use rusoto_s3::{
-    DeleteObjectError, DeleteObjectRequest, GetObjectError, GetObjectRequest, HeadObjectError,
-    HeadObjectRequest, PutObjectError, PutObjectOutput, PutObjectRequest, S3Client, StreamingBody,
-    S3,
+    DeleteObjectRequest, GetObjectError, GetObjectRequest, HeadObjectError, HeadObjectRequest,
+    PutObjectRequest, S3Client, StreamingBody, S3,
 };
 use tokio::io::AsyncReadExt;
 
