@@ -460,13 +460,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "hold"
+version = "0.1.0-placeholder"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d10e8d8f8f9ab2e776a75782be5a27434ee7d1c333b8fb8b3d7e930134625888"
+
+[[package]]
 name = "hold_s3"
 version = "0.1.0-alpha.1"
 dependencies = [
  "async-trait",
  "env_logger",
  "futures",
- "hold",
+ "hold 0.1.0-placeholder",
  "log",
  "rusoto_core",
  "rusoto_credential",
