@@ -1,5 +1,5 @@
 /target/
-Cargo.lock
+hold/Cargo.lock
 **/*.rs.bk
 .idea/
 .vscode/

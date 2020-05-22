@@ -1,0 +1,17 @@
+[package]
+name = "hold_s3"
+version = "0.1.0-alpha.1"
+authors = ["Matteo Joliveau <matteojoliveau@gmail.com>"]
+edition = "2018"
+readme = "../README.md"
+
+[dependencies]
+hold = { version = "0.1.0-alpha.1", path = "../hold" }
+async-trait = "^0.1.30"
+rusoto_core = { version = "^0.43.0", default_features = false, features = ["rustls"] }
+rusoto_s3 = { version = "^0.43.0", default_features = false, features = ["rustls"] }
+rusoto_credential = "^0.43.0"
+futures = "^0.3"
+tokio = { version = "^0.2", features = ["io-util"] }
+log = "^0.4"
+env_logger = "0.7.1"
