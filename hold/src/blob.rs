@@ -1,5 +1,7 @@
+use std::fmt::{self, Debug, Formatter};
+
 /// A blob is an object that can be stored onto a provider
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Blob {
     /// A blob key is a generic unique identifier for the blob.
     /// It roughly maps to a file path in a traditional filesystem.
@@ -31,6 +33,15 @@ impl Blob {
 
     pub fn content(&self) -> &Vec<u8> {
         &self.content
+    }
+}
+
+impl Debug for Blob {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Blob")
+            .field("key", &self.key)
+            .field("size", &self.size)
+            .finish()
     }
 }
 
