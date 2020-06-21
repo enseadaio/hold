@@ -1,6 +1,6 @@
 [package]
 name = "hold_s3"
-version = "0.1.0-alpha.2"
+version = "0.1.0-alpha.3"
 description = "AWS S3 provider for Hold, the Rust file storage engine"
 authors = ["Matteo Joliveau <matteojoliveau@gmail.com>"]
 license = "MIT"

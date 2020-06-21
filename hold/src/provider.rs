@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use async_trait::async_trait;
 
 use crate::blob::Blob;
@@ -5,7 +7,7 @@ use crate::Result;
 
 /// An abstract storage provider
 #[async_trait]
-pub trait Provider {
+pub trait Provider: Debug {
     /// Fetches a blob from the storage provider given its key
     async fn get_blob(&self, key: &str) -> Result<Option<Blob>>;
 
