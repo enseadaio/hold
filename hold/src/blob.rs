@@ -43,7 +43,7 @@ mod test {
     #[test]
     fn it_builds_a_new_blob() {
         let bytes = rand::thread_rng().gen::<[u8; 32]>().to_vec();
-        let blob = Blob::new(String::from("id"), bytes.clone());
+        let blob = Blob::new(String::from("key"), bytes.clone());
 
         assert_eq!(blob.key(), "key");
         assert_eq!(blob.content(), &bytes);

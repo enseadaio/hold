@@ -12,6 +12,7 @@ use async_trait::async_trait;
 use hold::blob::Blob;
 use hold::error::Error;
 use hold::provider::Provider;
+use std::fmt::{self, Debug, Formatter};
 
 /// Hold Provider for S3-compatible object storage services
 pub struct S3Provider {
@@ -55,6 +56,7 @@ impl S3Provider {
 
 #[async_trait]
 impl Provider for S3Provider {
+    #[tracing::instrument]
     async fn get_blob(&self, key: &str) -> hold::Result<Option<Blob>> {
         log::debug!("Fetching blob {}", key);
         let req = GetObjectRequest {
@@ -88,6 +90,7 @@ impl Provider for S3Provider {
             .map(|_| Some(Blob::new(key.to_string(), buf)))
     }
 
+    #[tracing::instrument]
     async fn store_blob(&self, blob: Blob) -> hold::Result<Blob> {
         log::debug!("Storing blob {} of {} bytes", blob.key(), blob.size());
         let req = PutObjectRequest {
@@ -104,6 +107,7 @@ impl Provider for S3Provider {
             .map_err(|err| Error::provider(err))
     }
 
+    #[tracing::instrument]
     async fn is_blob_present(&self, key: &str) -> hold::Result<bool> {
         log::debug!("Checking blob {} presence", key);
         let req = HeadObjectRequest {
@@ -138,6 +142,7 @@ impl Provider for S3Provider {
         }
     }
 
+    #[tracing::instrument]
     async fn delete_blob(&self, key: &str) -> hold::Result<()> {
         log::debug!("Deleting blob {}", key);
         let req = DeleteObjectRequest {
@@ -151,6 +156,14 @@ impl Provider for S3Provider {
             .await
             .map(|_| ())
             .map_err(|err| Error::provider(err))
+    }
+}
+
+impl Debug for S3Provider {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("S3Provider")
+            .field("bucket", &self.bucket)
+            .finish()
     }
 }
 

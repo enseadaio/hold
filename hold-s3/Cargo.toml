@@ -1,6 +1,6 @@
 [package]
 name = "hold_s3"
-version = "0.1.0-alpha.1"
+version = "0.1.0-alpha.2"
 description = "AWS S3 provider for Hold, the Rust file storage engine"
 authors = ["Matteo Joliveau <matteojoliveau@gmail.com>"]
 license = "MIT"
@@ -17,4 +17,6 @@ rusoto_s3 = { version = "^0.43.0", default_features = false, features = ["rustls
 rusoto_credential = "^0.43.0"
 futures = "^0.3"
 tokio = { version = "^0.2", features = ["io-util"] }
+tracing = "^0.1"
+tracing-futures = "^0.2"
 log = "^0.4"
