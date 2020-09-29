@@ -1,6 +1,6 @@
 [package]
 name = "hold_s3"
-version = "0.1.0-alpha.4"
+version = "0.1.0-alpha.5"
 description = "AWS S3 provider for Hold, the Rust file storage engine"
 authors = ["Matteo Joliveau <matteojoliveau@gmail.com>"]
 license = "MIT"
@@ -10,7 +10,7 @@ documentation = "https://docs.rs/hold_s3"
 readme = "../README.md"
 
 [dependencies]
-hold = "0.1.0-alpha.4"
+hold = "0.1.0-alpha.5"
 async-trait = "^0.1.30"
 rusoto_core = { version = "^0.43.0", default_features = false, features = ["rustls"] }
 rusoto_s3 = { version = "^0.43.0", default_features = false, features = ["rustls"] }

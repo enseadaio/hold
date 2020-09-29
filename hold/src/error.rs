@@ -11,6 +11,8 @@ pub enum Error {
     ProviderError {
         source: Box<dyn std::error::Error + Send + Sync>,
     },
+    #[snafu(display("Error while reading body: {}", message))]
+    BodyError { message: String },
 }
 
 impl Error {
@@ -26,6 +28,12 @@ impl Error {
             source: Box::new(source),
         }
     }
+
+    pub fn body_error<S: ToString>(message: S) -> Self {
+        Error::BodyError {
+            message: message.to_string(),
+        }
+    }
 }
 
 impl From<Error> for std::io::Error {
@@ -34,6 +42,7 @@ impl From<Error> for std::io::Error {
         match err {
             Error::IDNotFound { source, .. } => Self::new(ErrorKind::NotFound, source),
             Error::ProviderError { source, .. } => Self::new(ErrorKind::Other, source),
+            Error::BodyError { message } => Self::new(ErrorKind::Other, message),
         }
     }
 }

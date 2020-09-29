@@ -1,17 +1,15 @@
 use std::str::FromStr;
 
+use async_trait::async_trait;
+use hold::blob::Blob;
+use hold::error::Error;
+use hold::provider::Provider;
 use rusoto_core::{HttpClient, Region, RusotoError};
 use rusoto_credential::StaticProvider;
 use rusoto_s3::{
     DeleteObjectRequest, GetObjectError, GetObjectRequest, HeadObjectError, HeadObjectRequest,
     PutObjectRequest, S3Client, StreamingBody, S3,
 };
-use tokio::io::AsyncReadExt;
-
-use async_trait::async_trait;
-use hold::blob::Blob;
-use hold::error::Error;
-use hold::provider::Provider;
 use std::fmt::{self, Debug, Formatter};
 
 /// Hold Provider for S3-compatible object storage services
@@ -21,9 +19,12 @@ pub struct S3Provider {
 }
 
 impl S3Provider {
-    pub fn new(bucket: String) -> S3Provider {
+    pub fn new<B: ToString>(bucket: B) -> S3Provider {
         let s3 = S3Client::new(Region::default());
-        S3Provider { s3, bucket }
+        S3Provider {
+            s3,
+            bucket: bucket.to_string(),
+        }
     }
 
     pub fn new_with_config(config: S3Config) -> S3Provider {
@@ -79,31 +80,33 @@ impl Provider for S3Provider {
                 };
             }
         };
-        let mut buf = Vec::new();
-        output
-            .body
-            .unwrap()
-            .into_async_read()
-            .read_to_end(&mut buf)
-            .await
-            .map_err(|err| Error::provider(err))
-            .map(|_| Some(Blob::new(key.to_string(), buf)))
+        match output.body {
+            None => Err(Error::body_error("no body found in S3 response")),
+            Some(body) => Ok(Some(Blob::new(
+                key.to_string(),
+                output.content_length.unwrap() as usize,
+                body,
+            ))),
+        }
     }
 
     #[tracing::instrument]
     async fn store_blob(&self, blob: Blob) -> hold::Result<Blob> {
-        log::debug!("Storing blob {} of {} bytes", blob.key(), blob.size());
+        let key = blob.key().to_string();
+        let size = blob.size();
+        log::debug!("Storing blob {} of {} bytes", key, size);
         let req = PutObjectRequest {
             bucket: self.bucket.clone(),
-            key: blob.key().clone(),
-            body: Some(StreamingBody::from(blob.content().clone())),
+            key: key.clone(),
+            content_length: Some(blob.size() as i64),
+            body: Some(StreamingBody::new(blob.into_byte_stream())),
             ..PutObjectRequest::default()
         };
 
         self.s3
             .put_object(req)
             .await
-            .map(|_| blob)
+            .map(|_| Blob::empty(key, size))
             .map_err(|err| Error::provider(err))
     }
 
@@ -167,6 +170,7 @@ impl Debug for S3Provider {
     }
 }
 
+#[derive(Default)]
 pub struct S3Config {
     pub bucket: String,
     pub endpoint: Option<String>,
